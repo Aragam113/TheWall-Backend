@@ -25,6 +25,8 @@
 .vs
 .vscode
 .cache
+WallBackend/
+.idea/
 
 build*
 bin

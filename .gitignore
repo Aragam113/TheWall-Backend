@@ -22,6 +22,21 @@
 *.dylib
 *.dll
 
+.vs
+.vscode
+.cache
+
+build*
+bin
+lib
+out
+
+CMakeSettings.json
+vcpkg-configuration.json
+vcpkg_installed
+
+.env
+
 # Fortran module files
 *.mod
 *.smod

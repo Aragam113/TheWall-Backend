@@ -23,5 +23,10 @@ void Application::SetupRoutes()
     {
         return "The wall is here";
     });
-
+    
+    CROW_ROUTE(app, "/login").methods(crow::HTTPMethod::POST)([](const crow::request* req)
+        {
+        
+        }
+    )
 }

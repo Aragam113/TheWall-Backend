@@ -22,21 +22,28 @@
 *.dylib
 *.dll
 
+# IDE
 .vs
 .vscode
 .cache
 WallBackend/
 .idea/
 
+# Build directories
 build*
+cmake-build-*
 bin
 lib
 out
+x64
+WallBackend/
 
+# vcpkg
 CMakeSettings.json
 vcpkg-configuration.json
-vcpkg_installed
+vcpkg_installed/
 
+# Environment
 .env
 
 # Fortran module files
@@ -54,5 +61,5 @@ vcpkg_installed
 *.out
 *.app
 
-# debug information files
+# Debug information files
 *.dwo

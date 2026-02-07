@@ -1,5 +1,6 @@
 #include "Application.h"
 #include "../config.h"
+#include "../database/database.h"
 
 Application::Application()
 {
@@ -8,6 +9,24 @@ Application::Application()
 
 void Application::Run()
 {
+    app.loglevel(crow::LogLevel::Info);
+    try
+    {
+        std::string conn_str = "host=" + std::string(HOST) + 
+                       " port=" + std::to_string(DB_PORT) + 
+                       " dbname=" + std::string(DB_NAME) + 
+                       " user=" + std::string(USER) + 
+                       " password=" + std::string(PASSWORD);
+        database db(conn_str);
+        if (db.connect())
+        {
+            auto res = db.exec("SELECT * FROM test;");
+           CROW_LOG_INFO << res[0][0].as<std::string>();
+        }
+    } catch (const std::exception& e)
+    {
+        CROW_LOG_ERROR << e.what();
+    }
     app.port(PORT).multithreaded().run();
 }
 

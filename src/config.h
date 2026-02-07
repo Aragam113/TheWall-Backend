@@ -1,1 +1,3 @@
-int PORT = 18080;
+#pragma once
+
+constexpr int PORT = 18080;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "crow.h"
+#include "../middlewares/BearerAuthMiddleware.h"
 
 class Application
 {
@@ -10,5 +11,5 @@ public:
 
 private:
     void SetupRoutes(void);    
-    crow::SimpleApp app;
+    crow::App<BearerAuthMiddleware> app;
 };

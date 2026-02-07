@@ -22,14 +22,13 @@
     <Content Include="vcpkg.json" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="src\" />
-    <Folder Include="src\config.h" />
-    <Folder Include="src\main.cpp" />
-    <Folder Include="src\application" />
-    <Folder Include="src\middlewares" />
-    <Folder Include="src\middlewares\BearerAuthMiddleware.cpp\" />
-    <Folder Include="src\application\Application.cpp" />
-    <Folder Include="src\application\Application.h" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\application\Application.cpp" />
+    <ClCompile Include="src\middlewares\BearerAuthMiddleware.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\config.h" />
+    <ClInclude Include="src\application\Application.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -178,6 +177,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(VcpkgInstalledDir)x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

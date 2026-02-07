@@ -1,11 +1,12 @@
+#pragma once
 #include "crow.h"
 
-struct BearerAuthMiddleware {
+struct BearerAuthMiddleware : crow::ILocalMiddleware {
     struct context {
         std::string email;
     };
 
-    void beforeHandle (crow::request& req, crow::response& res, context& ctx) {
+    void before_handle (crow::request& req, crow::response& res, context& ctx) {
         auto authHeader = req.get_header_value("Authorization");
 
         if (authHeader.empty() || authHeader.substr(0, 7) != "Bearer ") {
@@ -29,7 +30,7 @@ struct BearerAuthMiddleware {
         }
     }
 
-    void afterHandle (crow::request& req, crow::response& res, context& ctx) {
+    void after_handle (crow::request& req, crow::response& res, context& ctx) {
 
     }
 };

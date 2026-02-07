@@ -39,11 +39,11 @@ bool database::connect() {
 }
 
 void database::init_pool() {
-    std::lock_guard<std::mutex> lock(pool_mutex);
+    std::scoped_lock<std::mutex> lock(pool_mutex);
     while (!pool.empty()) {
         pool.pop();
     }
-    for (size_t i = 0; i < pool_size; ++i) {
+    for (int i = 0; i < pool_size; ++i) {
         try {
             auto conn = std::make_unique<pqxx::connection>(conn_str);
             pool.push(std::move(conn));
@@ -54,7 +54,7 @@ void database::init_pool() {
 }
 
 std::unique_ptr<pqxx::connection> database::get_connection() {
-    std::lock_guard<std::mutex> lock(pool_mutex);
+    std::scoped_lock<std::mutex> lock(pool_mutex);
     if (pool.empty()) {
         throw std::runtime_error("Connection pool is empty");
     }
@@ -67,7 +67,7 @@ std::unique_ptr<pqxx::connection> database::get_connection() {
 }
 
 void database::release_connection(std::unique_ptr<pqxx::connection> conn) {
-    std::lock_guard<std::mutex> lock(pool_mutex);
+    std::scoped_lock<std::mutex> lock(pool_mutex);
     pool.push(std::move(conn));
 }
 

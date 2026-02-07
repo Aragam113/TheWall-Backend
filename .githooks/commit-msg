@@ -1,0 +1,33 @@
+#!/usr/bin/env sh
+
+set -eu
+
+msg_file="$1"
+first_line=$(head -n 1 "$msg_file" | tr -d '\r')
+
+# Allow merge and revert commits created by git
+case "$first_line" in
+  "Merge "*|"Revert "*)
+    exit 0
+    ;;
+ esac
+
+# Conventional Commits header:
+# type(scope)!: description
+# type!: description
+# type: description
+# Types are case-insensitive and should be lowercase in practice.
+if echo "$first_line" | grep -Eiq '^[a-z]+(\([a-z0-9-]+\))?(!)?: .+'; then
+  exit 0
+fi
+
+cat <<'EOF'
+Invalid commit message. Use Conventional Commits v1.0.0:
+  <type>[optional scope][optional !]: <description>
+Examples:
+  feat(auth): add token refresh
+  fix!: drop legacy api
+  chore: update deps
+EOF
+
+exit 1

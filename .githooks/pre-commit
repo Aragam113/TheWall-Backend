@@ -1,0 +1,19 @@
+#!/usr/bin/env sh
+
+set -eu
+
+. "$(dirname "$0")/_conventions.sh"
+
+branch=$(get_current_branch)
+
+# Detached HEAD: nothing to validate.
+if [ "$branch" = "HEAD" ] || [ -z "$branch" ]; then
+  exit 0
+fi
+
+if is_valid_branch_name "$branch"; then
+  exit 0
+fi
+
+branch_error_message >&2
+exit 1

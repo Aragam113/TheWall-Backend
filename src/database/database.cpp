@@ -24,12 +24,15 @@ bool database::connect() {
         if (connection) connection.reset();
         connection = std::make_unique<pqxx::connection>(conn_str);
         if (connection->is_open()) {
+            is_connected = true;
             init_pool();
             CROW_LOG_INFO << "Connection pool to database is established (" << pool_size << " connections)";
             return true;
         }
+        is_connected = false;
         return false;
     } catch (const pqxx::failure& e) {
+        is_connected = false;
         CROW_LOG_ERROR << "Connection to database failed: " << e.what();
         return false;
     }

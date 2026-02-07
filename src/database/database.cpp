@@ -24,7 +24,6 @@ bool database::connect() {
         if (connection) connection.reset();
         connection = std::make_unique<pqxx::connection>(conn_str);
         if (connection->is_open()) {
-            connection->close();
             init_pool();
             CROW_LOG_INFO << "Connection pool to database is established (" << pool_size << " connections)";
             return true;

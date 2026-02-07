@@ -19,15 +19,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Application.h" />
-    <ClInclude Include="config.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Application.cpp" />
-    <ClCompile Include="main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="vcpkg.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="src\" />
+    <Folder Include="src\config.h" />
+    <Folder Include="src\main.cpp" />
+    <Folder Include="src\application" />
+    <Folder Include="src\middlewares" />
+    <Folder Include="src\middlewares\BearerAuthMiddleware.cpp\" />
+    <Folder Include="src\application\Application.cpp" />
+    <Folder Include="src\application\Application.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

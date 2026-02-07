@@ -1,6 +1,6 @@
 #include "Application.h"
 #include "../config.h"
-
+#include "../database/database.h"
 Application::Application()
 {
     SetupRoutes();
@@ -8,6 +8,19 @@ Application::Application()
 
 void Application::Run()
 {
+    app.loglevel(crow::LogLevel::Warning);
+    try
+    {
+        database db("host=localhost port=5432 dbname=postgres user=postgres password=postgresql");
+        if (db.connect())
+        {
+            auto res = db.exec("SELECT * FROM test;");
+            std::cout << res[0][0].as<std::string>();
+        }
+    } catch (const std::exception& e)
+    {
+        CROW_LOG_ERROR << e.what();
+    }
     app.port(PORT).multithreaded().run();
 }
 

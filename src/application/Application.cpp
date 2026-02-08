@@ -14,8 +14,7 @@ void Application::Run()
         database db("host=localhost port=5432 dbname=postgres user=postgres password=postgresql");
         if (db.connect())
         {
-            auto res = db.exec("SELECT * FROM test;");
-            std::cout << res[0][0].as<std::string>();
+            db.startup_database();
         }
     } catch (const std::exception& e)
     {

@@ -1,6 +1,6 @@
 #include "database.h"
-
 #include <crow/logging.h>
+#include "../config.h"
 
 database::database (const std::string& connection_string) : connection (nullptr), is_connected (false)
 {
@@ -44,6 +44,22 @@ pqxx::result database::exec(const std::string& query) {
     } catch (const pqxx::sql_error& e) {
         CROW_LOG_ERROR <<  "SQL error: " << e.what();
         CROW_LOG_ERROR <<  "Request: " << e.query();
+        throw;
+    }
+}
+
+void database::startup_database()
+{
+    if (!is_connected) { throw std::runtime_error("The database is not connected"); }
+    
+    try {
+        pqxx::work txn(*connection);
+        txn.exec(CREATE_TABLES_QUERY);
+        txn.commit();
+        CROW_LOG_INFO << "Succesfully created tables";
+    } catch (const pqxx::sql_error& e) {
+        CROW_LOG_ERROR << "SQL error: " << e.what();
+        CROW_LOG_ERROR << "Request: " << e.query();
         throw;
     }
 }

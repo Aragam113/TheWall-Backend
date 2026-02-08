@@ -18,5 +18,5 @@ public:
     {
         return is_connected;
     }
-    
+    void startup_database();
 };

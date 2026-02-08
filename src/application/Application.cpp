@@ -1,5 +1,6 @@
 #include "Application.h"
 #include "../config.h"
+#include "../database/database.h"
 
 Application::Application()
 {
@@ -8,6 +9,18 @@ Application::Application()
 
 void Application::Run()
 {
+    app.loglevel(crow::LogLevel::Warning);
+    try
+    {
+        database db("host=localhost port=5432 dbname=postgres user=postgres password=postgresql");
+        if (db.connect())
+        {
+            db.startup_database();
+        }
+    } catch (const std::exception& e)
+    {
+        CROW_LOG_ERROR << e.what();
+    }
     app.port(PORT).multithreaded().run();
 }
 

@@ -12,7 +12,12 @@ void Application::Run()
     app.loglevel(crow::LogLevel::Warning);
     try
     {
-        database db("host=localhost port=5432 dbname=postgres user=postgres password=postgresql");
+        std::string conn_str = "host=" + std::string(HOST) + 
+                       " port=" + std::to_string(DB_PORT) + 
+                       " dbname=" + std::string(DB_NAME) + 
+                       " user=" + std::string(USER) + 
+                       " password=" + std::string(PASSWORD);
+        database db(conn_str);
         if (db.connect())
         {
             db.startup_database();

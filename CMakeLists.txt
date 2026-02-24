@@ -15,6 +15,8 @@ add_executable(WallBackend
         src/application/Application.cpp
         src/application/Application.h
         src/middlewares/BearerAuthMiddleware.cpp
+        src/database/database.cpp
+        src/database/database.h
         src/config.h
 )
 

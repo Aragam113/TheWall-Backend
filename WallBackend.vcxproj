@@ -22,6 +22,7 @@
     <Content Include="vcpkg.json" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\database\database.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\application\Application.cpp" />
     <ClCompile Include="src\middlewares\BearerAuthMiddleware.h" />
@@ -29,6 +30,7 @@
   <ItemGroup>
     <ClInclude Include="src\config.h" />
     <ClInclude Include="src\application\Application.h" />
+    <ClInclude Include="src\database\database.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

@@ -23,7 +23,8 @@ private:
 public: 
     explicit database(const std::string& connection_string);
     ~database();
-    bool connect();
+    bool initialize(void);
+    bool connect(void);
     pqxx::result exec(const std::string& query);
     bool isConnected() const
     {

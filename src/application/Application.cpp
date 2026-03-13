@@ -1,7 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include "Application.h"
-#include "../config.h"
+#include "../config/config.h"
 #include "../database/database.h"
 #include <dotenv.h>
 
@@ -27,6 +27,8 @@ void Application::Run(void)
 
         if (!db.connect()) return;
         
+        if (!db.initialize()) return;
+
         auto res = db.exec("SELECT * FROM Users;");
         CROW_LOG_INFO << res[0][0].as<std::string>();
         

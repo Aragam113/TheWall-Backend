@@ -4,9 +4,9 @@
 #include <mutex>
 #include <algorithm>
 
-database::database(const std::string& connection_string) 
-    : conn_str(connection_string), connection(nullptr), is_connected(false)
+database::database(const std::string& connection_string) : conn_str(connection_string), connection(nullptr), is_connected(false)
 {
+    
 }
 
 database::~database() {
@@ -16,6 +16,112 @@ database::~database() {
     }
     if (connection && connection->is_open()) {
         connection->close();
+    }
+}
+
+bool database::initialize()
+{
+    if (!is_connected) return false;
+
+    try
+    {
+        auto connection = get_connection();
+        pqxx::work txn(*connection);
+        
+        txn.exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";");
+        
+        txn.exec(R"(
+            DO $$ BEGIN
+                CREATE TYPE user_role AS ENUM ('admin', 'moderator', 'user');
+            EXCEPTION
+                WHEN duplicate_object THEN NULL;
+            END $$;
+        )");
+        
+        txn.exec(R"(
+            DO $$ BEGIN
+                CREATE TYPE user_status AS ENUM ('active', 'closed', 'banned');
+            EXCEPTION
+                WHEN duplicate_object THEN NULL;
+            END $$;
+        )");
+        
+        txn.exec(R"(
+            CREATE TABLE IF NOT EXISTS Users (
+                id                  UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+                username            VARCHAR(255) NOT NULL,
+                password            VARCHAR(255) NOT NULL,
+                profileAvatarUri    VARCHAR(255),   
+                profileBannerUri    VARCHAR(255),
+                role                user_role DEFAULT 'user' NOT NULL,
+                status              user_status DEFAULT 'active' NOT NULL,
+                lastLogin           TIMESTAMP DEFAULT NOW(),
+                createdAt           TIMESTAMP DEFAULT NOW()
+            )
+        )");
+        
+        txn.exec(R"(
+            CREATE TABLE IF NOT EXISTS Posts (
+                id                  UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+                authorId            UUID NOT NULL,
+                text                TEXT NOT NULL,
+                imageUri            VARCHAR(255),
+                createdAt           TIMESTAMP DEFAULT NOW(),
+
+                CONSTRAINT fk_author
+                    FOREIGN KEY(authorId)
+                    REFERENCES Users(id)
+                    ON DELETE CASCADE
+            )
+        )");
+        
+        txn.exec(R"(
+            CREATE TABLE IF NOT EXISTS Likes (
+                id                UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+                userId            UUID NOT NULL,
+                postId            UUID NOT NULL,
+
+                CONSTRAINT fk_user
+                    FOREIGN KEY(userId)
+                    REFERENCES Users(id)
+                    ON DELETE CASCADE,
+
+                CONSTRAINT fk_post
+                    FOREIGN KEY(postId)
+                    REFERENCES Posts(id)
+                    ON DELETE CASCADE
+            )
+        )");
+        
+        txn.exec(R"(
+            CREATE TABLE IF NOT EXISTS Comments (
+                id                UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+                userId            UUID NOT NULL,
+                postId            UUID NOT NULL,
+                text              TEXT NOT NULL,
+
+                CONSTRAINT fk_user
+                    FOREIGN KEY(userId)
+                    REFERENCES Users(id)
+                    ON DELETE CASCADE,
+
+                CONSTRAINT fk_post
+                    FOREIGN KEY(postId)
+                    REFERENCES Posts(id)
+                    ON DELETE CASCADE
+            )
+        )");
+
+        txn.commit();
+        release_connection(std::move(connection));
+        
+        CROW_LOG_INFO << "Database initialized successfully";
+        return true;
+    }
+    catch (const std::exception& e)
+    {
+        CROW_LOG_ERROR << "Connection to database failed: " << e.what();
+        return false;
     }
 }
 

@@ -20,9 +20,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".env" />
+    <Content Include="README.md" />
     <Content Include="vcpkg.json" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\config\config.cpp" />
     <ClCompile Include="src\database\database.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\application\Application.cpp" />
@@ -30,9 +32,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\laserpants\dotenv\dotenv.h" />
-    <ClInclude Include="src\config.h" />
     <ClInclude Include="src\application\Application.h" />
+    <ClInclude Include="src\config\config.h" />
     <ClInclude Include="src\database\database.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="git-assets\" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

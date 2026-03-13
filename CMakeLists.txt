@@ -16,6 +16,7 @@ add_executable(WallBackend
         src/application/Application.h
         src/middlewares/BearerAuthMiddleware.cpp
         src/config.h
+        src/config.cpp 
 )
 
 target_link_libraries(WallBackend PRIVATE

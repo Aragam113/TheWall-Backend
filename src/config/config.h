@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 // Values removed to .env
 // Only declaration here

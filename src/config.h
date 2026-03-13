@@ -1,8 +1,10 @@
 #pragma once
 
-constexpr int PORT = 18080;
-const std::string HOST = "localhost";
-const std::string USER = "postgres";
-const std::string PASSWORD = "postgresql";
-const std::string DB_NAME = "postgres";
-constexpr int DB_PORT = 5432;
+// Values removed to .env
+// Only declaration here
+extern std::string PORT;
+extern std::string HOST;
+extern std::string USER;
+extern std::string PASSWORD;
+extern std::string DB_NAME;
+extern std::string DB_PORT;

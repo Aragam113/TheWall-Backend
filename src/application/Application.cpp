@@ -1,36 +1,43 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include "Application.h"
 #include "../config.h"
 #include "../database/database.h"
+#include <dotenv.h>
 
 Application::Application()
 {
+    SetupEnvironment();
     SetupRoutes();
 }
 
-void Application::Run()
+void Application::Run(void)
 {
     app.loglevel(crow::LogLevel::Info);
     try
     {
-        std::string conn_str = "host=" + std::string(HOST) + 
-                       " port=" + std::to_string(DB_PORT) + 
-                       " dbname=" + std::string(DB_NAME) + 
-                       " user=" + std::string(USER) + 
-                       " password=" + std::string(PASSWORD);
+        std::string conn_str =
+            " host="     + std::string(HOST)    + 
+            " port="     + std::string(DB_PORT) + 
+            " dbname="   + std::string(DB_NAME) + 
+            " user="     + std::string(USER)    + 
+            " password=" + std::string(PASSWORD);
+
         database db(conn_str);
-        if (db.connect())
-        {
-            auto res = db.exec("SELECT * FROM test;");
-           CROW_LOG_INFO << res[0][0].as<std::string>();
-        }
+
+        if (!db.connect()) return;
+        
+        auto res = db.exec("SELECT * FROM Users;");
+        CROW_LOG_INFO << res[0][0].as<std::string>();
+        
     } catch (const std::exception& e)
     {
         CROW_LOG_ERROR << e.what();
     }
-    app.port(PORT).multithreaded().run();
+    app.port(std::stoi(PORT)).multithreaded().run();
 }
 
-void Application::SetupRoutes()
+void Application::SetupRoutes(void)
 {
     CROW_ROUTE(app, "/")([]()
     {
@@ -51,7 +58,7 @@ void Application::SetupRoutes()
         {
             crow::json::wvalue res;
             
-            res["token"] = "example-token-for-test";
+            res["token"]  = "example-token-for-test";
             res["status"] = "success";
             
             return crow::response(res);
@@ -67,4 +74,16 @@ void Application::SetupRoutes()
         auto& ctx = app.get_context<BearerAuthMiddleware>(req); 
         return ctx.email;
     });
+}
+
+void Application::SetupEnvironment(void)
+{
+    dotenv::init();
+
+    PORT     = dotenv::getenv("PORT");
+    HOST     = dotenv::getenv("HOST");
+    USER     = dotenv::getenv("USER");
+    PASSWORD = dotenv::getenv("PASSWORD");
+    DB_NAME  = dotenv::getenv("DB_NAME");
+    DB_PORT  = dotenv::getenv("DB_PORT");
 }

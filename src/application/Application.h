@@ -10,6 +10,7 @@ public:
     void Run(void);
 
 private:
-    void SetupRoutes(void);    
+    void SetupRoutes(void);
+    static void SetupEnvironment(void);
     crow::App<BearerAuthMiddleware> app;
 };

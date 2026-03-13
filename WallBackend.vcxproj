@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <Content Include=".env" />
     <Content Include="vcpkg.json" />
   </ItemGroup>
   <ItemGroup>
@@ -28,6 +29,7 @@
     <ClCompile Include="src\middlewares\BearerAuthMiddleware.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\laserpants\dotenv\dotenv.h" />
     <ClInclude Include="src\config.h" />
     <ClInclude Include="src\application\Application.h" />
     <ClInclude Include="src\database\database.h" />
@@ -136,6 +138,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(_ZVcpkgCurrentInstalledDir)include;$(ProjectDir)include\laserpants\dotenv</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
